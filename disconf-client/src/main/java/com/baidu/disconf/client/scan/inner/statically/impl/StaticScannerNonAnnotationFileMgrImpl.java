@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.baidu.disconf.client.common.constants.SupportFileTypeEnum;
 import com.baidu.disconf.client.common.model.DisConfCommonModel;
 import com.baidu.disconf.client.common.model.DisconfCenterBaseModel;
 import com.baidu.disconf.client.common.model.DisconfCenterFile;
@@ -39,7 +40,7 @@ public class StaticScannerNonAnnotationFileMgrImpl extends StaticScannerMgrImplB
     public static void scanData2Store(String fileName) {
 
         DisconfCenterBaseModel disconfCenterBaseModel =
-            StaticScannerNonAnnotationFileMgrImpl.getDisconfCenterFile(fileName);
+                StaticScannerNonAnnotationFileMgrImpl.getDisconfCenterFile(fileName);
 
         DisconfStoreProcessorFactory.getDisconfStoreFileProcessor().transformScanData(disconfCenterBaseModel);
     }
@@ -80,6 +81,9 @@ public class StaticScannerNonAnnotationFileMgrImpl extends StaticScannerMgrImplB
         // file name
         disconfCenterFile.setFileName(fileName);
 
+        // file type
+        disconfCenterFile.setSupportFileTypeEnum(SupportFileTypeEnum.getByFileName(fileName));
+
         //
         // disConfCommonModel
         DisConfCommonModel disConfCommonModel = makeDisConfCommonModel("", "");
@@ -87,11 +91,11 @@ public class StaticScannerNonAnnotationFileMgrImpl extends StaticScannerMgrImplB
 
         // Remote URL
         String url = DisconfWebPathMgr.getRemoteUrlParameter(DisClientSysConfig.getInstance().CONF_SERVER_STORE_ACTION,
-                                                                disConfCommonModel.getApp(),
-                                                                disConfCommonModel.getVersion(),
-                                                                disConfCommonModel.getEnv(),
-                                                                disconfCenterFile.getFileName(),
-                                                                DisConfigTypeEnum.FILE);
+                disConfCommonModel.getApp(),
+                disConfCommonModel.getVersion(),
+                disConfCommonModel.getEnv(),
+                disconfCenterFile.getFileName(),
+                DisConfigTypeEnum.FILE);
         disconfCenterFile.setRemoteServerUrl(url);
 
         return disconfCenterFile;

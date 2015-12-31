@@ -1,8 +1,13 @@
 package com.baidu.disconf.client.common.model;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.baidu.disconf.client.common.constants.SupportFileTypeEnum;
+import com.baidu.disconf.core.common.utils.ClassLoaderUtil;
+import com.baidu.disconf.core.common.utils.OsUtil;
 
 /**
  * 配置文件表示
@@ -24,6 +29,11 @@ public class DisconfCenterFile extends DisconfCenterBaseModel {
 
     // 文件名
     private String fileName;
+
+    private String copy2TargetDirPath;
+
+    // 文件类型
+    private SupportFileTypeEnum supportFileTypeEnum = SupportFileTypeEnum.ANY;
 
     public Class<?> getCls() {
         return cls;
@@ -57,22 +67,37 @@ public class DisconfCenterFile extends DisconfCenterBaseModel {
         this.additionalKeyMaps = additionalKeyMaps;
     }
 
+    public SupportFileTypeEnum getSupportFileTypeEnum() {
+        return supportFileTypeEnum;
+    }
+
+    public void setSupportFileTypeEnum(SupportFileTypeEnum supportFileTypeEnum) {
+        this.supportFileTypeEnum = supportFileTypeEnum;
+    }
+
+    public String getCopy2TargetDirPath() {
+        return copy2TargetDirPath;
+    }
+
+    public void setCopy2TargetDirPath(String copy2TargetDirPath) {
+        this.copy2TargetDirPath = copy2TargetDirPath;
+    }
+
     @Override
     public String toString() {
-        return "\n\tDisconfCenterFile [\n\tkeyMaps=" + keyMaps + "\n\tcls=" + cls + "\n\tfileName=" + fileName +
-                   super.toString() + "]";
+        return "\n\tDisconfCenterFile [\n\tkeyMaps=" + keyMaps + "\n\tcls=" + cls + "\n\tfileName=" + fileName
+                + "\n\tcopy2TargetDirPath=" + copy2TargetDirPath +
+                super.toString() + "]";
     }
 
     @Override
     public String infoString() {
         return "\n\tDisconfCenterFile [\n\tkeyMaps=" + keyMaps + "\n" +
-                   "\tadditionalKeyMaps=\" + additionalKeyMaps + \n\tcls=" + cls + super.infoString() + "]";
+                "\tadditionalKeyMaps=" + additionalKeyMaps + "\n\tcls=" + cls + super.infoString() + "]";
     }
 
     /**
      * 获取可以表示的KeyMap对
-     *
-     * @return
      */
     public Map<String, Object> getKV() {
 
@@ -93,6 +118,41 @@ public class DisconfCenterFile extends DisconfCenterBaseModel {
     }
 
     /**
+     * 配置文件的路径
+     */
+    public String getFilePath() {
+
+        if (copy2TargetDirPath != null) {
+
+            if (copy2TargetDirPath.startsWith("/")) {
+                return OsUtil.pathJoin(copy2TargetDirPath, fileName);
+            }
+
+            return OsUtil.pathJoin(ClassLoaderUtil.getClassPath(), copy2TargetDirPath, fileName);
+        }
+
+        return OsUtil.pathJoin(ClassLoaderUtil.getClassPath(), fileName);
+    }
+
+    /**
+     * 配置文件的路径
+     */
+    public String getFileDir() {
+
+        // 获取相对于classpath的路径
+        if (copy2TargetDirPath != null) {
+
+            if (copy2TargetDirPath.startsWith("/")) {
+                return OsUtil.pathJoin(copy2TargetDirPath);
+            }
+
+            return OsUtil.pathJoin(ClassLoaderUtil.getClassPath(), copy2TargetDirPath);
+        }
+
+        return ClassLoaderUtil.getClassPath();
+    }
+
+    /**
      * 配置文件Item项表示，包括了值，还有其类型
      *
      * @author liaoqiqi
@@ -102,6 +162,7 @@ public class DisconfCenterFile extends DisconfCenterBaseModel {
 
         private Object value;
         private Field field;
+        private Method setMethod;
 
         public Object getValue() {
             return value;
@@ -119,16 +180,35 @@ public class DisconfCenterFile extends DisconfCenterBaseModel {
             this.field = field;
         }
 
+        public Method getSetMethod() {
+            return setMethod;
+        }
+
+        public void setSetMethod(Method setMethod) {
+            this.setMethod = setMethod;
+        }
+
         @Override
         public String toString() {
-            return "FileItemValue [value=" + value + ", field=" + field + "]";
+            return "FileItemValue{" +
+                    "value=" + value +
+                    ", field=" + field +
+                    ", setMethod=" + setMethod +
+                    '}';
         }
 
         public FileItemValue(Object value, Field field) {
             super();
             this.value = value;
             this.field = field;
+
         }
 
+        public FileItemValue(Object value, Field field, Method setMethod) {
+            super();
+            this.value = value;
+            this.field = field;
+            this.setMethod = setMethod;
+        }
     }
 }

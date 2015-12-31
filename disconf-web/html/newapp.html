@@ -112,11 +112,19 @@
                                 <span class="private-item-key">APP：</span>
                                 <input id="app" type="text" class="private-item-value"/>
                             </div>
+
                             <div class="private-item">
                                 <span class="private-item-key">说明：</span>
                                 <textarea id="desc" type="text" class="private-item-value"
                                           style="width:400px;height:200px;"></textarea>
                             </div>
+
+                            <div class="private-item">
+                                <span class="private-item-key">Emails(;号分隔)：</span>
+                                <textarea id="emails" type="text" class="private-item-value"
+                                          style="width:400px;height:50px;"></textarea>
+                            </div>
+
                             <div id="error" class="alert alert-warning hide" role="alert">
                                 表单选项不能为空或填写格式错误！
                             </div>
@@ -145,7 +153,7 @@
                     <span>分布式配置管理平台</span>
                     <div class="sep10"></div>
                     <span class="myfade">Theme by <a href="http://django-china.cn/" target="_blank">Django中国社区</a>， 
-                        Power by 百度联盟前端技术部，
+                        Power by 百度程序化广告交易工程平台技术部，
                     Copyright &copy; 2014 </span>
                 </div>
             </div>
@@ -156,6 +164,17 @@
         <script src="dep/bootstrap/js/bootstrap.js"></script>
         <script src="assets/js/util.js"></script>
         <script src="assets/js/common.js"></script>
+
+        <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "//hm.baidu.com/hm.js?c4578bda90040ec19ded56112b82246f";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
 
 
 <script src="assets/js/newapp.js"></script>

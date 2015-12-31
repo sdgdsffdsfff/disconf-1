@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.baidu.dsp.common.constant.ErrorCode;
 import com.baidu.dsp.common.constant.FrontEndInterfaceConstant;
 import com.baidu.dsp.common.context.ContextReader;
-import com.baidu.ub.common.log.AopLogFactory;
 
 /**
  * 通用的JSON返回器
@@ -24,7 +25,7 @@ import com.baidu.ub.common.log.AopLogFactory;
 @Component
 public class JsonObjectUtils {
 
-    private final static Logger LOG = AopLogFactory.getLogger(JsonObjectUtils.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(JsonObjectUtils.class);
 
     private static ContextReader contextReader;
 
@@ -46,13 +47,14 @@ public class JsonObjectUtils {
         JsonObject json = new JsonObject();
         json.addData(key, value);
 
+        LOG.info(json.toString());
+
         return json;
     }
 
     /**
      * 返回正确(顶层结构), 非列表请求
      *
-     * @param key
      * @param value
      *
      * @return
@@ -62,13 +64,14 @@ public class JsonObjectUtils {
         JsonSimpleObject json = new JsonSimpleObject();
         json.setResult(value);
 
+        LOG.info(json.toString());
+
         return json;
     }
 
     /**
      * 返回正确, 列表请求
      *
-     * @param key
      * @param value
      *
      * @return
@@ -80,6 +83,8 @@ public class JsonObjectUtils {
         json.setPage(totalCount);
         json.addData(value);
         json.addFootData(footResult);
+
+        LOG.info(json.toString());
 
         return json;
     }
@@ -100,15 +105,40 @@ public class JsonObjectUtils {
             json.addFieldError(str, contextReader.getMessage(errors.get(str)));
         }
 
+        LOG.info(json.toString());
+
+        return json;
+    }
+
+    /**
+     * 参数错误: Field
+     *
+     * @param errors
+     *
+     * @return
+     */
+    public static JsonObjectBase buildFieldError(Map<String, String> errors, Map<String, Object[]> argsMap,
+                                                 ErrorCode statusCode) {
+
+        JsonObjectError json = new JsonObjectError();
+        json.setStatus(statusCode.getCode());
+
+        for (String str : errors.keySet()) {
+
+            try {
+                json.addFieldError(str, contextReader.getMessage(errors.get(str), argsMap.get(str)));
+            } catch (NoSuchMessageException e) {
+                json.addFieldError(str, errors.get(str));
+            }
+        }
+
+        LOG.info(json.toString());
+
         return json;
     }
 
     /**
      * 参数错误: global
-     *
-     * @param bindingResult
-     *
-     * @return
      */
     public static JsonObjectBase buildGlobalError(String error, ErrorCode errorCode) {
 
@@ -117,19 +147,21 @@ public class JsonObjectUtils {
 
         json.addGlobalError(contextReader.getMessage(error));
 
+        LOG.info(json.toString());
+
         return json;
     }
 
     /**
-     * @param jsonObjectBase
      */
     public static ModelAndView JsonObjectError2ModelView(JsonObjectError json) {
 
-        ModelAndView model = new ModelAndView(new MappingJacksonJsonView());
+        ModelAndView model = new ModelAndView(new MappingJackson2JsonView());
         model.addObject(FrontEndInterfaceConstant.RETURN_SUCCESS, json.getSuccess());
         model.addObject(FrontEndInterfaceConstant.RETURN_MESSAGE, json.getMessage());
         model.addObject(FrontEndInterfaceConstant.STATUS_CODE_STRING, json.getStatus());
         model.addObject(FrontEndInterfaceConstant.SESSION_ID, json.getSessionId());
+
         return model;
     }
 

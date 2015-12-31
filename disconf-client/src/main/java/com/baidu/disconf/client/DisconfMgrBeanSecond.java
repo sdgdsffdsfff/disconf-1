@@ -8,19 +8,12 @@ package com.baidu.disconf.client;
  */
 public class DisconfMgrBeanSecond {
 
-    /**
-     *
-     */
     public void init() {
 
-        DisconfMgr.secondScan();
+        DisconfMgr.getInstance().secondScan();
     }
 
-    /**
-     *
-     */
-    public void destory() {
-
-        DisconfMgr.close();
+    public void destroy() {
+        DisconfMgr.getInstance().close();
     }
 }

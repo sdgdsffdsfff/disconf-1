@@ -16,7 +16,7 @@ import com.baidu.disconf.client.common.update.IDisconfUpdate;
 import com.baidu.disconf.client.store.DisconfStoreProcessor;
 import com.baidu.disconf.client.store.inner.DisconfCenterStore;
 import com.baidu.disconf.client.store.processor.model.DisconfValue;
-import com.github.knightliao.apollo.utils.common.ClassUtils;
+import com.baidu.disconf.client.utils.ClassUtils;
 
 /**
  * 配置项仓库算子实现器
@@ -37,7 +37,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
         if (DisconfCenterStore.getInstance().getConfItemMap().containsKey(keyName)) {
 
             DisconfCenterStore.getInstance().getConfItemMap().get(keyName).getDisconfCommonCallbackModel()
-                .getDisconfConfUpdates().addAll(iDisconfUpdateList);
+                    .getDisconfConfUpdates().addAll(iDisconfUpdateList);
         }
 
     }
@@ -51,7 +51,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
         if (DisconfCenterStore.getInstance().getConfItemMap().containsKey(keyName)) {
 
             return DisconfCenterStore.getInstance().getConfItemMap().get(keyName).getDisconfCommonCallbackModel()
-                       .getDisconfConfUpdates();
+                    .getDisconfConfUpdates();
         }
 
         return new ArrayList<IDisconfUpdate>();
@@ -67,7 +67,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
 
         // 校验是否存在
         if (disconfCenterItem == null) {
-            LOGGER.error("canot find " + keyName + " in store....");
+            LOGGER.error("cannot find " + keyName + " in store....");
             return null;
         }
 
@@ -81,11 +81,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
     public boolean hasThisConf(String keyName) {
 
         // 配置项
-        if (DisconfCenterStore.getInstance().getConfItemMap().containsKey(keyName)) {
-            return true;
-        }
-
-        return false;
+        return DisconfCenterStore.getInstance().getConfItemMap().containsKey(keyName);
     }
 
     /**
@@ -98,7 +94,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
 
         // 校验是否存在
         if (disconfCenterItem == null) {
-            LOGGER.error("canot find " + key + " in store....");
+            LOGGER.error("cannot find " + key + " in store....");
             return;
         }
 
@@ -149,7 +145,6 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
 
         } catch (Exception e) {
             LOGGER.error("inject2Instance key: " + key + " " + e.toString(), e);
-            return;
         }
     }
 
@@ -163,7 +158,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
 
         // 校验是否存在
         if (disconfCenterItem == null) {
-            LOGGER.debug("canot find " + keyName + " in store....");
+            LOGGER.debug("cannot find " + keyName + " in store....");
             return null;
         }
 
@@ -180,12 +175,11 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
 
         // 校验是否存在
         if (disconfCenterItem == null) {
-            LOGGER.error("canot find " + key + " in store....");
+            LOGGER.error("cannot find " + key + " in store....");
             return;
         }
 
         if (disconfValue == null || disconfValue.getValue() == null) {
-            LOGGER.error("value is null for {}", key);
             return;
         }
 
@@ -208,7 +202,6 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
 
         } catch (Exception e) {
             LOGGER.error("key: " + key + " " + e.toString(), e);
-            return;
         }
 
     }
@@ -263,7 +256,7 @@ public class DisconfStoreItemProcessorImpl implements DisconfStoreProcessor {
     @Override
     public String confToString() {
 
-        StringBuffer sBuffer = new StringBuffer();
+        StringBuilder sBuffer = new StringBuilder();
         sBuffer.append("\n");
         Map<String, DisconfCenterItem> disMap = DisconfCenterStore.getInstance().getConfItemMap();
         for (String file : disMap.keySet()) {

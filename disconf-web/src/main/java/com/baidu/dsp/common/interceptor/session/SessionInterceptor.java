@@ -4,12 +4,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baidu.dsp.common.interceptor.WebCommonInterceptor;
 import com.baidu.ub.common.commons.ThreadContext;
-import com.baidu.ub.common.log.AopLogFactory;
 import com.github.knightliao.apollo.utils.tool.TokenUtil;
 
 /**
@@ -19,16 +19,16 @@ import com.github.knightliao.apollo.utils.tool.TokenUtil;
  */
 public class SessionInterceptor extends WebCommonInterceptor {
 
+    protected static final Logger LOG = LoggerFactory.getLogger(SessionInterceptor.class);
+
     /**
      * 会话ID
      */
-    private final static String SESSION_KEY = "sessionId";
-
-    private static final Logger LOG = AopLogFactory.getLogger(SessionInterceptor.class);
+    public static final String SESSION_KEY = "sessionId";
 
     @Override
     public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
-        throws Exception {
+            throws Exception {
 
         // 删除
         MDC.remove(SESSION_KEY);
@@ -38,12 +38,12 @@ public class SessionInterceptor extends WebCommonInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3)
-        throws Exception {
+            throws Exception {
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-        throws Exception {
+            throws Exception {
 
         // 初始化会话
         ThreadContext.init();

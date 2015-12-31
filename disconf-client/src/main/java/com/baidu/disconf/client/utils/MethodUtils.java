@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.baidu.disconf.client.common.annotations.DisconfFileItem;
 import com.baidu.disconf.client.common.annotations.DisconfItem;
 import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
-import com.github.knightliao.apollo.utils.common.ClassUtils;
 
 /**
  * @author liaoqiqi
@@ -22,12 +21,10 @@ public class MethodUtils {
 
     /**
      * 对于一个 get/is 方法，返回其相对应的Field
-     *
-     * @return
      */
     public static Field getFieldFromMethod(Method method, Field[] expectedFields, DisConfigTypeEnum disConfigTypeEnum) {
 
-        String fieldName = null;
+        String fieldName;
 
         if (disConfigTypeEnum.equals(DisConfigTypeEnum.FILE)) {
 
@@ -62,4 +59,5 @@ public class MethodUtils {
 
         return null;
     }
+
 }

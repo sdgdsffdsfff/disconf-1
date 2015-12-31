@@ -7,11 +7,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.baidu.ub.common.db.DaoPage;
 import com.baidu.ub.common.db.DaoPageResult;
-import com.baidu.ub.common.log.AopLogFactory;
 import com.baidu.unbiz.common.genericdao.dao.GenericDao;
 import com.baidu.unbiz.common.genericdao.operator.Match;
 import com.baidu.unbiz.common.genericdao.operator.Modify;
@@ -26,12 +26,11 @@ import com.baidu.unbiz.common.genericdao.param.NotParam;
 import com.github.knightliao.apollo.db.bo.BaseObject;
 
 /**
- * @author Darwin(Tianxin)
  */
 public abstract class AbstractDao<KEY extends Serializable, ENTITY extends BaseObject<KEY>> extends
-    GenericDao<KEY, ENTITY> {
+        GenericDao<KEY, ENTITY> {
 
-    protected final static Logger LOG = AopLogFactory.getLogger(AbstractDao.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(AbstractDao.class);
 
     @Override
     @Resource(name = "onedbJdbcTemplate")
@@ -53,7 +52,7 @@ public abstract class AbstractDao<KEY extends Serializable, ENTITY extends BaseO
 
     @Override
     public void recordLog(String sLog) {
-        LOG.info(sLog);
+        LOG.debug(sLog);
     }
 
     // modified by liqingyun
@@ -135,9 +134,6 @@ public abstract class AbstractDao<KEY extends Serializable, ENTITY extends BaseO
      * 根据查询条件获取结果集列表
      *
      * @param matches
-     * @param order
-     * @param curPage
-     * @param pageSize
      *
      * @return
      */

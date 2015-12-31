@@ -1,6 +1,3 @@
-/*
- * Copyright (C) 2015 Baidu, Inc. All Rights Reserved.
- */
 package com.baidu.disconf.client.addons.properties;
 
 import java.util.ArrayList;
@@ -11,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 有两种监控方式
+ * 1. 使用timer, 定时进行check
+ * 2. 当事件触发时，直调用 ReloadConfigurationMonitor.reload
  */
 public class ReloadConfigurationMonitor extends TimerTask {
 
@@ -24,6 +23,10 @@ public class ReloadConfigurationMonitor extends TimerTask {
     }
 
     public void run() {
+        reload();
+    }
+
+    public static void reload() {
 
         for (ReconfigurableBean bean : reconfigurableBeans) {
             try {

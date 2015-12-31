@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.baidu.disconf.client.core.filetype.DisconfFileTypeProcessor;
-import com.github.knightliao.apollo.utils.config.ConfigLoaderUtils;
+import com.baidu.disconf.client.utils.ConfigLoaderUtils;
 
 /**
- * Properites处理器
+ * Properties 处理器
  *
  * @author knightliao
  */
@@ -17,7 +17,7 @@ public class DisconfPropertiesProcessorImpl implements DisconfFileTypeProcessor 
     @Override
     public Map<String, Object> getKvMap(String fileName) throws Exception {
 
-        Properties properties = null;
+        Properties properties;
 
         // 读取配置
         properties = ConfigLoaderUtils.loadConfig(fileName);
